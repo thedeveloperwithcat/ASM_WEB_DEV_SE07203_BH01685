@@ -1,0 +1,155 @@
+<head><!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Trang chủ</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+</head>
+<script>
+  // Dữ liệu mẫu (có thể lấy từ database nếu muốn)
+  const productData = {
+    SP001: {
+      title: "Nước hoa Dior Sauvage",
+      img: "img1.jpg",
+      price: "2.500.000₫",
+      desc: "Hương thơm nam tính, quyến rũ...",
+    },
+    SP002: {
+      title: "Son môi Rouge Dior",
+      img: "img2.jpg",
+      price: "1.200.000₫",
+      desc: "Son lâu trôi, chất lì, màu đẹp tự nhiên...",
+    },
+    SP003: {
+      title: "Serum dưỡng da",
+      img: "img3.jpg",
+      price: "1.800.000₫",
+      desc: "Cấp ẩm, chống lão hóa, cho da mềm mịn...",
+    },
+    SP004: {
+      title: "Kem nền Forever",
+      img: "img4.jpg",
+      price: "1.350.000₫",
+      desc: "Che phủ tốt, lâu trôi, mịn da...",
+    },
+  };
+
+  // Gán sự kiện click vào thẻ .product-card
+  document.querySelectorAll('.product-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const code = card.querySelector('p').textContent.split(': ')[1]; // Lấy mã sản phẩm (SP001)
+      const data = productData[code];
+
+      // Gán dữ liệu vào modal
+      document.getElementById('modal-img').src = data.img;
+      document.getElementById('modal-title').textContent = data.title;
+      document.getElementById('modal-code').textContent = 'Mã sản phẩm: ' + code;
+      document.getElementById('modal-price').textContent = 'Giá: ' + data.price;
+      document.getElementById('modal-desc').textContent = data.desc;
+
+      // Hiển thị modal
+      document.getElementById('productModal').style.display = 'block';
+    });
+  });
+
+  // Đóng modal khi bấm nút X
+  document.querySelector('.close-btn').addEventListener('click', () => {
+    document.getElementById('productModal').style.display = 'none';
+  });
+
+  // Đóng modal khi bấm ra ngoài nội dung
+  window.addEventListener('click', e => {
+    const modal = document.getElementById('productModal');
+    if (e.target === modal) {
+      modal.style.display = 'none';
+    }
+  });
+</script>
+<body>
+  <div class="sidebar">
+    <h2>☰</h2>
+    <ul>
+      <li><a href="index.html">🏠 <span class="text">Trang chủ</span></a></li>
+      <li><a href="contact.html">📞 <span class="text">Liên hệ</span></a></li>
+      <li><a href="login.html">🔐 <span class="text">Đăng nhập</span></a></li>
+      <li><a href="register.html">📝 <span class="text">Đăng ký</span></a></li>
+      <li><a href="profile.html">👤 <span class="text">Hồ sơ</span></a></li>
+      <li><a href="cart.html">🛒 <span class="text">Giỏ hàng</span></a></li>
+    </ul>
+  </div>
+  <header>
+    <h1>Trang chủ</h1>
+    <nav>
+      <a href="index.html">Trang chủ</a>
+      <a href="contact.html">Liên hệ</a>
+      <a href="login.html">Đăng nhập</a>
+      <a href="register.html">Đăng ký</a>
+      <a href="profile.html">Hồ sơ</a>
+      <a href="cart.html">Giỏ hàng</a>
+    </nav>
+  </header>
+
+  <section>
+    <input type="text" placeholder="🔍 Tìm sản phẩm..." class="search-box">
+  <h2>Sản phẩm nổi bật</h2>
+  <div class="product-grid">
+    <!-- Sản phẩm 1 -->
+    <div class="product-card">
+      <img src="img1.jpg" alt="Sản phẩm 1">
+      <h3>Nước hoa Dior Sauvage</h3>
+      <p>Mã: SP001</p>
+      <p>Giá: 2,500,000đ</p>
+      <p><strong>Còn lại:</strong> 10 sản phẩm</p>
+      <label>Số lượng: <input type="number" value="1" min="1"></label>
+      <button>Thêm vào giỏ hàng</button>
+    </div>
+
+    <!-- Sản phẩm 2 -->
+    <div class="product-card">
+      <img src="img2.jpg" alt="Sản phẩm 2">
+      <h3>Son môi Rouge Dior</h3>
+      <p>Mã: SP002</p>
+      <p>Giá: 1,200,000đ</p>
+      <p><strong>Còn lại:</strong> 10 sản phẩm</p>
+      <label>Số lượng: <input type="number" value="1" min="1"></label>
+      <button>Thêm vào giỏ hàng</button>
+    </div>
+
+    <!-- Sản phẩm 3 -->
+    <div class="product-card">
+      <img src="img3.jpg" alt="Sản phẩm 3">
+      <h3>Serum dưỡng da</h3>
+      <p>Mã: SP003</p>
+      <p>Giá: 1,800,000đ</p>
+      <p><strong>Còn lại:</strong> 10 sản phẩm</p>
+      <label>Số lượng: <input type="number" value="1" min="1"></label>
+      <button>Thêm vào giỏ hàng</button>
+    </div>
+
+    <!-- Sản phẩm 4 -->
+    <div class="product-card">
+      <img src="img4.jpg" alt="Sản phẩm 4">
+      <h3>Kem nền Forever</h3>
+      <p>Mã: SP004</p>
+      <p>Giá: 1,350,000đ</p>
+      <p><strong>Còn lại:</strong> 10 sản phẩm</p>
+      <label>Số lượng: <input type="number" value="1" min="1"></label>
+      <button>Thêm vào giỏ hàng</button>
+    </div>
+  </div>
+  </section>
+</body>
+<!-- Popup chi tiết sản phẩm -->
+<div class="modal" id="productModal">
+  <div class="modal-content">
+    <span class="close-btn">&times;</span>
+    <img id="modal-img" src="" alt="Sản phẩm" />
+    <h2 id="modal-title">Tên sản phẩm</h2>
+    <p id="modal-code">Mã sản phẩm: ...</p>
+    <p id="modal-price">Giá: ...</p>
+    <p id="modal-desc">Mô tả chi tiết ở đây...</p>
+    <button>Thêm vào giỏ hàng</button>
+  </div>
+</div>
+</html>

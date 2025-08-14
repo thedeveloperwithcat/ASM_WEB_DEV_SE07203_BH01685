@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Đăng ký</title>
+  <link rel="stylesheet" href="styles.css">
+  <script>
+    function validateRegisterForm() {
+      const username = document.getElementById("username").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      const confirm = document.getElementById("confirm").value;
+
+      if (!username || !email || !password || !confirm) {
+        alert("Vui lòng điền đầy đủ thông tin!");
+        return false;
+      }
+      if (password !== confirm) {
+        alert("Mật khẩu không khớp!");
+        return false;
+      }
+      return true;
+    }
+  </script>
+</head>
+<body>
+  <div class="sidebar">
+    <h2>☰</h2>
+    <ul>
+      <li><a href="index.html">🏠 <span class="text">Trang chủ</span></a></li>
+      <li><a href="contact.html">📞 <span class="text">Liên hệ</span></a></li>
+      <li><a href="login.html">🔐 <span class="text">Đăng nhập</span></a></li>
+      <li><a href="register.html">📝 <span class="text">Đăng ký</span></a></li>
+      <li><a href="profile.html">👤 <span class="text">Hồ sơ</span></a></li>
+      <li><a href="cart.html">🛒 <span class="text">Giỏ hàng</span></a></li>
+    </ul>
+  </div>
+  <header>
+    <h1>Đăng ký</h1>
+  </header>
+
+  <section>
+    <form onsubmit="return validateRegisterForm()">
+      <label>Tên đăng nhập:</label>
+      <input type="text" id="username">
+
+      <label>Email:</label>
+      <input type="email" id="email">
+
+      <label>Mật khẩu:</label>
+      <input type="password" id="password">
+
+      <label>Xác nhận mật khẩu:</label>
+      <input type="password" id="confirm">
+
+      <button type="submit">Đăng ký</button>
+    </form>
+  </section>
+</body>
+</html>

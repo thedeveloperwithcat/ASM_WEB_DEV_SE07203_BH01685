@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Đăng nhập</title>
+  <link rel="stylesheet" href="styles.css">
+  <script>
+    // Danh sách tài khoản giả lập (tạm thời)
+    const accounts = [
+      { username: "abc3", password: "123456" }
+    ];
+
+    function validateLoginForm() {
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value;
+
+      if (!username || !password) {
+        alert("Vui lòng điền đầy đủ thông tin!");
+        return false;
+      }
+
+      // Kiểm tra tài khoản có trong danh sách không
+      const found = accounts.find(
+        acc => acc.username === username && acc.password === password
+      );
+
+      if (!found) {
+        alert("Tên đăng nhập hoặc mật khẩu không đúng!");
+        return false;
+      }
+
+      alert("Đăng nhập thành công!");
+      window.location.href = "profile.html"; // chuyển đến trang hồ sơ sau khi đăng nhập
+      return false; // ngăn form reload
+    }
+  </script>
+</head>
+<body>
+  <div class="sidebar">
+    <h2>☰</h2>
+    <ul>
+      <li><a href="index.html">🏠 <span class="text">Trang chủ</span></a></li>
+      <li><a href="contact.html">📞 <span class="text">Liên hệ</span></a></li>
+      <li><a href="login.html">🔐 <span class="text">Đăng nhập</span></a></li>
+      <li><a href="register.html">📝 <span class="text">Đăng ký</span></a></li>
+      <li><a href="profile.html">👤 <span class="text">Hồ sơ</span></a></li>
+      <li><a href="cart.html">🛒 <span class="text">Giỏ hàng</span></a></li>
+    </ul>
+  </div>
+  <header>
+    <h1>Đăng nhập</h1>
+  </header>
+
+  <section>
+    <form onsubmit="return validateLoginForm()">
+      <label>Tên đăng nhập:</label>
+      <input type="text" id="username">
+
+      <label>Mật khẩu:</label>
+      <input type="password" id="password">
+
+      <button type="submit">Đăng nhập</button>
+    </form>
+  </section>
+</body>
+
+</html>
