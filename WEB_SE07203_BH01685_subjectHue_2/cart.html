@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Shopping Cart</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="sidebar">
+    <h2>☰</h2>
+    <ul>
+      <li><a href="index.html">🏠 <span class="text">Home</span></a></li>
+      <li><a href="contact.html">📞 <span class="text">Contact</span></a></li>
+      <li><a href="login.html">🔐 <span class="text">Login</span></a></li>
+      <li><a href="register.html">📝 <span class="text">Register</span></a></li>
+      <li><a href="profile.html">👤 <span class="text">Profile</span></a></li>
+      <li><a href="cart.html">🛒 <span class="text">Cart</span></a></li>
+    </ul>
+  </div>
+  <header>
+    <h1>My Shopping Cart</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="contact.html">Contact</a>
+      <a href="login.html">Login</a>
+      <a href="register.html">Register</a>
+      <a href="profile.html">Profile</a>
+      <a href="cart.html">Cart</a>
+    </nav>
+  </header>
+
+<section>
+  <table border="1" cellpadding="10" cellspacing="0" id="cartTable">
+    <tr>
+      <th>Product</th>
+      <th>Quantity</th>
+      <th>Price</th>
+      <th>Subtotal</th>
+      <th>Action</th>
+    </tr>
+  </table>
+  <p id="total"><strong>Total: 0 VND</strong></p>
+  <button id="checkoutBtn">Checkout</button>
+
+  <!-- Modal thanh toán -->
+  <div id="checkoutModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" id="closeCheckout">&times;</span>
+      <h2>Payment Information</h2>
+      <form id="checkoutForm">
+        <label>Full Name:</label>
+        <input type="text" id="fullname" required>
+
+        <label>Email:</label>
+        <input type="text" id="email" required>
+
+        <label>Address:</label>
+        <textarea id="address" required></textarea>
+
+        <label>Phone Number:</label>
+        <input type="tel" id="phone" required>
+
+        <label>Payment Method:</label>
+        <select id="paymentMethod" required>
+          <option value="cod">Cash on Delivery</option>
+          <option value="bank">Bank Transfer</option>
+          <option value="momo">MoMo Wallet</option>
+        </select>
+
+        <button type="submit">Confirm Order</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<script>
+  function loadCart() {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const table = document.getElementById("cartTable");
+    table.innerHTML = `
+      <tr>
+        <th>Product</th>
+        <th>Quantity</th>
+        <th>Price</th>
+        <th>Subtotal</th>
+        <th>Action</th>
+      </tr>
+    `;
+    let total = 0;
+
+    cart.forEach((item, index) => {
+      const row = document.createElement("tr");
+      const subtotal = item.price * item.quantity;
+      total += subtotal;
+
+      row.innerHTML = `
+        <td>${item.title}</td>
+        <td><input type="number" min="1" value="${item.quantity}" data-index="${index}" class="qty-input"></td>
+        <td>${item.price.toLocaleString("vi-VN")} VND</td>
+        <td>${subtotal.toLocaleString("vi-VN")} VND</td>
+        <td><span class="delete-btn" data-index="${index}">❌ Delete</span></td>
+      `;
+      table.appendChild(row);
+    });
+
+    document.getElementById("total").innerHTML = `<strong>Total: ${total.toLocaleString("vi-VN")} VND</strong>`;
+
+    // Cập nhật số lượng
+    document.querySelectorAll(".qty-input").forEach(input => {
+      input.addEventListener("change", (e) => {
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+        const index = e.target.dataset.index;
+        const newQty = parseInt(e.target.value);
+        if (newQty <= 0) cart.splice(index, 1);
+        else cart[index].quantity = newQty;
+        localStorage.setItem("cart", JSON.stringify(cart));
+        loadCart(); // render lại bảng
+      });
+    });
+
+    // Xóa sản phẩm
+    document.querySelectorAll(".delete-btn").forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+        const index = e.target.dataset.index;
+        cart.splice(index, 1);
+        localStorage.setItem("cart", JSON.stringify(cart));
+        loadCart(); // render lại bảng
+      });
+    });
+  }
+
+  loadCart(); // gọi lần đầu để hiển thị
+
+  // Hiện/ẩn modal
+  const checkoutBtn = document.getElementById("checkoutBtn");
+  const checkoutModal = document.getElementById("checkoutModal");
+  const closeCheckout = document.getElementById("closeCheckout");
+
+  checkoutBtn.addEventListener("click", () => {
+    checkoutModal.style.display = "block";
+  });
+
+  closeCheckout.addEventListener("click", () => {
+    checkoutModal.style.display = "none";
+  });
+
+  window.addEventListener("click", (e) => {
+    if (e.target === checkoutModal) {
+      checkoutModal.style.display = "none";
+    }
+  });
+
+  // Xử lý form thanh toán
+  document.getElementById("checkoutForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const fullname = document.getElementById("fullname").value;
+    const email = document.getElementById("email").value;
+    const address = document.getElementById("address").value;
+    const phone = document.getElementById("phone").value;
+    const paymentMethod = document.getElementById("paymentMethod").value;
+
+    alert(`✅ Order successful!\nCustomer: ${fullname}\nEmail: ${email}\nPhone: ${phone}\nAddress: ${address}\nPayment: ${paymentMethod}`);
+
+    // Xoá giỏ hàng
+    localStorage.removeItem("cart");
+    location.href = "index.html";
+  });
+
+</script>
+</body>
+</html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Home</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <div class="sidebar">
+    <h2>☰</h2>
+    <ul>
+      <li><a href="index.html">🏠 <span class="text">Home</span></a></li>
+      <li><a href="contact.html">📞 <span class="text">Contact</span></a></li>
+      <li><a href="login.html">🔐 <span class="text">Login</span></a></li>
+      <li><a href="register.html">📝 <span class="text">Register</span></a></li>
+      <li><a href="profile.html">👤 <span class="text">Profile</span></a></li>
+      <li><a href="cart.html">🛒 <span class="text">Cart</span></a></li>
+    </ul>
+  </div>
+
+  <header>
+    <h1>BagLuxe</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="contact.html">Contact</a>
+      <a href="login.html">Login</a>
+      <a href="register.html">Register</a>
+      <a href="profile.html">Profile</a>
+      <a href="cart.html">Cart</a>
+    </nav>
+  </header>
+
+  <section>
+    <!-- Tìm kiếm & Bộ lọc -->
+    <div class="filter-container">
+      <input type="text" id="searchInput" placeholder="🔍 Search products..." class="search-box">
+
+      <select id="priceFilter">
+        <option value="">-- Price --</option>
+        <option value="low">Under 1,000,000 VND</option>
+        <option value="mid">2,000,000 - 3,000,000 VND</option>
+        <option value="high">Above 3,000,000 VND</option>
+      </select>
+
+      <select id="brandFilter">
+        <option value="">-- Brand --</option>
+        <option value="dior">Dior</option>
+        <option value="chanel">Chanel</option>
+        <option value="gucci">Gucci</option>
+      </select>
+
+      <select id="stockFilter">
+        <option value="">-- Stock Status --</option>
+        <option value="in">In Stock</option>
+        <option value="out">Out of Stock</option>
+      </select>
+    </div>
+
+    <!-- Product Grid -->
+    <div class="product-grid" id="productGrid">
+      <!-- Sản phẩm sẽ được JS tạo ra -->
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-content">
+      <p>© 2025 Authentic Fashion. All rights reserved.</p>
+      <p>📧 Email: lienhe@mypham.vn | ☎️ Hotline: 1900 1234</p>
+    </div>
+  </footer>
+
+  <!-- Popup chi tiết sản phẩm -->
+  <div class="modal" id="productModal">
+    <div class="modal-content">
+      <span class="close-btn">&times;</span>
+      <form id="productForm">
+        <img id="modal-img" src="" alt="Product" style="max-width:200px; display:block; margin:auto;" />
+        <h2 id="modal-title">Product Name</h2>
+        <p id="modal-code">Product Code: ...</p>
+        <p id="modal-price">Price: ...</p>
+        <p id="modal-desc">Detailed description here...</p>
+
+        <label for="modal-quantity">Quantity:</label>
+        <input type="number" id="modal-quantity" value="1" min="1" />
+
+        <button type="submit">🛒 Add to Cart</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Dữ liệu sản phẩm
+    const productData = [
+      { code: "SP001", title: "Dior Book Tote Bag gray Toile De Jouy Embroidery", price: 2500000, brand: "dior", stock: 10, img: "img/img1.jpg", desc: "Elegant, luxurious, stylish..." },
+      { code: "SP002", title: "Classic Bag 11.12 - Chanel", price: 1200000, brand: "chanel", stock: 15, img: "img/img2.jpg", desc: "Refined edges, harmonious colors..." },
+      { code: "SP003", title: "Gucci Mini GG handbag - Gucci", price: 3800000, brand: "gucci", stock: 0, img: "img/img3.jpg", desc: "Bright, dynamic, polite..." },
+      { code: "SP004", title: "Miss Dior Sand Colored Bag - Dior", price: 1350000, brand: "dior", stock: 8, img: "img/img4.jpg", desc: "Good coverage, long-lasting, smooth skin..." },
+    ];
+
+    const grid = document.getElementById("productGrid");
+    const searchInput = document.getElementById("searchInput");
+    const priceFilter = document.getElementById("priceFilter");
+    const brandFilter = document.getElementById("brandFilter");
+    const stockFilter = document.getElementById("stockFilter");
+
+    const productModal = document.getElementById("productModal");
+    const modalImg = document.getElementById("modal-img");
+    const modalTitle = document.getElementById("modal-title");
+    const modalCode = document.getElementById("modal-code");
+    const modalPrice = document.getElementById("modal-price");
+    const modalDesc = document.getElementById("modal-desc");
+    const modalQuantity = document.getElementById("modal-quantity");
+    const productForm = document.getElementById("productForm");
+
+    // Hàm hiển thị sản phẩm
+    function renderProducts(products) {
+      grid.innerHTML = "";
+      products.forEach(p => {
+        const card = document.createElement("div");
+        card.className = "product-card";
+        card.setAttribute("data-code", p.code);
+        card.setAttribute("data-price", p.price);
+        card.setAttribute("data-brand", p.brand);
+        card.setAttribute("data-stock", p.stock);
+
+        card.innerHTML = `
+          <img src="${p.img}" alt="${p.title}">
+          <h3>${p.title}</h3>
+          <p>Code: ${p.code}</p>
+          <p>Price: ${p.price.toLocaleString("vi-VN")} VND</p>
+          <p><strong>Stock:</strong> ${p.stock} items</p>
+          <label>Quantity: <input type="number" value="1" min="1"></label>
+          <button>Add to Cart</button>
+        `;
+        grid.appendChild(card);
+
+        // Sự kiện click vào button Thêm vào giỏ hàng
+        card.querySelector("button").addEventListener("click", (e) => {
+          e.stopPropagation();
+          const quantity = parseInt(card.querySelector("input").value);
+          addToCart(p.code, p.title, p.price, quantity);
+        });
+
+        // Sự kiện click vào card để mở modal (trừ button & input)
+        card.addEventListener("click", (e) => {
+          if (e.target.tagName === "INPUT" || e.target.tagName === "BUTTON") return;
+          showModal(p);
+        });
+      });
+    }
+
+    // Hàm thêm vào giỏ hàng
+    function addToCart(code, title, price, quantity) {
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const existing = cart.find(item => item.code === code);
+      if (existing) {
+        existing.quantity += quantity;
+      } else {
+        cart.push({ code, title, price, quantity });
+      }
+      localStorage.setItem("cart", JSON.stringify(cart));
+      alert("✅ Added to Cart!");
+    }
+
+    // Hàm hiển thị modal
+    function showModal(product) {
+      modalImg.src = product.img;
+      modalTitle.textContent = product.title;
+      modalCode.textContent = "Product Code: " + product.code;
+      modalPrice.textContent = "Price: " + product.price.toLocaleString("vi-VN") + " VND";
+      modalDesc.textContent = product.desc;
+      modalQuantity.value = 1;
+
+      productForm.dataset.code = product.code;
+      productModal.style.display = "block";
+    }
+
+    // Đóng modal
+    productModal.querySelector(".close-btn").addEventListener("click", () => {
+      productModal.style.display = "none";
+    });
+    window.addEventListener("click", e => {
+      if (e.target === productModal) productModal.style.display = "none";
+    });
+
+    // Xử lý submit form modal
+    productForm.addEventListener("submit", e => {
+      e.preventDefault();
+      const code = e.target.dataset.code;
+      const product = productData.find(p => p.code === code);
+      const quantity = parseInt(modalQuantity.value);
+      addToCart(product.code, product.title, product.price, quantity);
+      productModal.style.display = "none";
+    });
+
+    // Hàm lọc & tìm kiếm
+    function filterProducts() {
+      const keyword = searchInput.value.toLowerCase().trim();
+      const priceVal = priceFilter.value;
+      const brandVal = brandFilter.value;
+      const stockVal = stockFilter.value;
+
+      const filtered = productData.filter(p => {
+        if (keyword && !p.title.toLowerCase().includes(keyword) && !p.code.toLowerCase().includes(keyword)) return false;
+        if (priceVal === "low" && p.price >= 1000000) return false;
+        if (priceVal === "mid" && (p.price < 2000000 || p.price > 500000)) return false;
+        if (priceVal === "high" && p.price <= 3000000) return false;
+        if (brandVal && p.brand.toLowerCase() !== brandVal) return false;
+        if (stockVal === "in" && p.stock <= 0) return false;
+        if (stockVal === "out" && p.stock > 0) return false;
+        return true;
+      });
+      renderProducts(filtered);
+    }
+
+    // Gắn sự kiện filter & search
+    [searchInput, priceFilter, brandFilter, stockFilter].forEach(el => {
+      el.addEventListener("input", filterProducts);
+      el.addEventListener("change", filterProducts);
+    });
+
+    // Render lần đầu
+    renderProducts(productData);
+  </script>
+</body>
+</html>

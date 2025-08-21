@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>User Profile</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="sidebar">
+    <h2>☰</h2>
+    <ul>
+      <li><a href="index.html">🏠 <span class="text">Home</span></a></li>
+      <li><a href="contact.html">📞 <span class="text">Contact</span></a></li>
+      <li><a href="login.html">🔐 <span class="text">Login</span></a></li>
+      <li><a href="register.html">📝 <span class="text">Register</span></a></li>
+      <li><a href="profile.html">👤 <span class="text">Profile</span></a></li>
+      <li><a href="cart.html">🛒 <span class="text">Cart</span></a></li>
+    </ul>
+  </div>
+  <header>
+    <h1>User Profile</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="contact.html">Contact</a>
+      <a href="login.html">Login</a>
+      <a href="register.html">Register</a>
+      <a href="profile.html">Profile</a>
+      <a href="cart.html">Cart</a>
+    </nav>
+  </header>
+
+  <section>
+    <h2>Account Information</h2>
+
+    <!-- Khung hiển thị -->
+    <div class="profile-card">
+      <p><strong>Username:</strong> <span id="display-username"></span></p>
+      <p><strong>Email:</strong> <span id="display-email"></span></p>
+      <p><strong>Address:</strong> <span id="display-address"></span></p>
+    </div>
+
+    <!-- Form cập nhật -->
+    <form onsubmit="event.preventDefault(); saveProfile();">
+      <label>Username:</label>
+      <input type="text" id="username">
+
+      <label>Email:</label>
+      <input type="email" id="email">
+
+      <label>Address:</label>
+      <input type="text" id="address">
+
+      <button type="submit">Save Changes</button>
+    </form>
+  </section>
+
+  <script>
+    window.onload = function () {
+      const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+      if (!loggedInUser) {
+        window.location.href = "login.html";
+        return;
+      }
+
+      // Hiển thị trong form
+      document.getElementById("username").value = loggedInUser.username;
+      document.getElementById("email").value = loggedInUser.email;
+      document.getElementById("address").value = loggedInUser.address || "";
+
+      // Hiển thị trong profile card
+      document.getElementById("display-username").innerText = loggedInUser.username;
+      document.getElementById("display-email").innerText = loggedInUser.email;
+      document.getElementById("display-address").innerText = loggedInUser.address || "Not set";
+    };
+
+    function saveProfile() {
+      let loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+      if (!loggedInUser) return;
+
+      const username = document.getElementById("username").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const address = document.getElementById("address").value.trim();
+
+      if (!username || !email) {
+        alert("Username and Email cannot be empty!");
+        return;
+      }
+
+      // Cập nhật user trong accounts
+      let accounts = JSON.parse(localStorage.getItem("accounts")) || [];
+      let index = accounts.findIndex(acc => acc.username === loggedInUser.username);
+
+      if (index !== -1) {
+        accounts[index].username = username;
+        accounts[index].email = email;
+        accounts[index].address = address;
+        localStorage.setItem("accounts", JSON.stringify(accounts));
+      }
+
+      // Cập nhật loggedInUser
+      loggedInUser.username = username;
+      loggedInUser.email = email;
+      loggedInUser.address = address;
+      localStorage.setItem("loggedInUser", JSON.stringify(loggedInUser));
+
+      // Update UI
+      document.getElementById("display-username").innerText = username;
+      document.getElementById("display-email").innerText = email;
+      document.getElementById("display-address").innerText = address || "Not set";
+
+      alert("Profile updated successfully!");
+    }
+  </script>
+</body>
+</html>
